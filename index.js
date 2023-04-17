@@ -1,6 +1,7 @@
 const express = require("express");
 const sessions = require('express-session');
 const fileUpload = require('express-fileupload');
+const crypto = require('crypto');
 const {Storage} = require('@google-cloud/storage');
 const {Datastore} = require('@google-cloud/datastore');
 const ExifImage = require('exif').ExifImage;
@@ -219,7 +220,7 @@ app.post("/login", (req, res) => {
     const user = req.body;
     const query = datastore.createQuery('User');
     query.filter('user_name', user.user_name);
-    query.filter('password', user.password);
+    query.filter('password', crypto.createHash('md5').update(user.password).digest('hex'));
     datastore.runQuery(query, (err, entities) => {
         if (entities.length > 0) {
             req.session.user = user.user_name;
@@ -273,7 +274,7 @@ app.post("/register", (req, res) => {
         data: {
             'user_name': user_name,
             'email': email,
-            'password': password
+            'password': crypto.createHash('md5').update(password).digest('hex')
         },
     }
 
