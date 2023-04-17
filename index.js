@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 
     if (!req.session.user) {
         let formHTML =`
-<div style='border: 5px solid red; padding: 20px'>
+<div style='border: 5px solid blue; padding: 20px'>
 ${menu}<br />
 Please login or register an account in order to upload or view images.</div>`;
         res.send(formHTML);
